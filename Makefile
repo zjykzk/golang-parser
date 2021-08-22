@@ -43,7 +43,18 @@ $(BUILD_DIR)/test/utf8_decode_rune: $(BUILD_DIR)/test/utf8_decode_rune.o $(BUILD
 test_utf8_decode_rune: $(BUILD_DIR)/test/utf8_decode_rune
 	$(BUILD_DIR)/test/utf8_decode_rune
 
-test: test_utf8_is_full_rune test_utf8_decode_rune
+$(BUILD_DIR)/test/unicode_is_letter: $(BUILD_DIR)/test/unicode_is_letter.o \
+	$(BUILD_DIR)/unicode.o $(BUILD_DIR)/unicode_groups.o
+	mkdir -p $(dir $@)
+	$(CC) $^ -o $@ $(LDFLAGS)
+
+test_unicode_is_letter: $(BUILD_DIR)/test/unicode_is_letter
+	$(BUILD_DIR)/test/unicode_is_letter
+
+test: test_utf8_is_full_rune test_utf8_decode_rune test_unicode_is_letter
+
+unicode:
+	python3 make_unicode_groups.py > src/unicode_groups.c
 
 .PHONY: clean
 

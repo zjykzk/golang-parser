@@ -1,2 +1,6 @@
 build
 .mypy_cache/3.9
+Scripts.txt
+UnicodeData.txt
+__pycache__
+test/unicode_is_letter.o

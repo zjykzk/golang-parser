@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # Author : zenk
 # 2021-08-09 23:38
-
 """
 Parser for Unicode data files (as distributed by unicode.org).
 
@@ -14,9 +13,10 @@ from __future__ import division
 from __future__ import print_function
 
 import re
-import urllib
+import urllib.request
 
 # Directory or URL where Unicode tables reside.
+# _UNICODE_DIR = "."
 _UNICODE_DIR = "https://www.unicode.org/Public/13.0.0/ucd"
 
 # Largest valid Unicode code value.
@@ -34,15 +34,15 @@ class InputError(Error):
 def _UInt(s):
     """Converts string to Unicode code point ('263A' => 0x263a).
 
-  Args:
-    s: string to convert
+    Args:
+      s: string to convert
 
-  Returns:
-    Unicode code point
+    Returns:
+      Unicode code point
 
-  Raises:
-    InputError: the string is not a valid Unicode value.
-  """
+    Raises:
+      InputError: the string is not a valid Unicode value.
+    """
 
     try:
         v = int(s, 16)
@@ -148,9 +148,9 @@ def ReadUnicodeTable(filename, nfields, doline):
     nfields: the number of expected fields per line in that file.
     doline: the function to call for each table entry.
 
-   Raises:
-     InputError: nfields is invalid (must be >= 2).
-   """
+    Raises:
+      InputError: nfields is invalid (must be >= 2).
+    """
 
     if nfields < 2:
         raise InputError("invalid number of fields %d" % (nfields, ))
@@ -163,7 +163,7 @@ def ReadUnicodeTable(filename, nfields, doline):
     else:
         fil = filename
 
-    first = None  # first code in multiline range
+    first = 0  # first code in multiline range
     expect_last = None  # tag expected for "Last" line in multiline range
     lineno = 0  # current line number
     for line in fil:
@@ -202,7 +202,7 @@ def ReadUnicodeTable(filename, nfields, doline):
                     raise InputError("expected Last line for %s" %
                                      (expect_last, ))
                 codes = range(first, codes[0] + 1)
-                first = None
+                first = 0
                 expect_last = None
                 fields[0] = "%04X..%04X" % (codes[0], codes[-1])
                 fields[1] = name
