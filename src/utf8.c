@@ -1,10 +1,5 @@
 #include "utf8.h"
 
-#define RuneError 0xFFFD
-#define RuneSelf  0x80
-#define MaxRune   0x0010FFFF
-#define UTFMax    4
-
 // The default lowest and highest continuation byte.
 #define locb 0b10000000
 #define hicb 0b10111111
@@ -113,7 +108,7 @@ bool isFullRune(u8 p[], usize n) {
 // An encoding is invalid if it is incorrect UTF-8, encodes a rune that is
 // out of range, or is not the shortest possible UTF-8 encoding for the
 // value. No other validation is performed.
-void decodeRune(u8 p[], usize n, rune * r, usize * size) {
+void decodeRune(u8 p[], usize n, rune * r, int * size) {
   if (n < 1) {
     *r = RuneError;
     *size = 0;
